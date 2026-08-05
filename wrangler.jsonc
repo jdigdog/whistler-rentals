@@ -13,7 +13,7 @@
   },
 
   "d1_databases": [
-    { "binding": "DB", "database_name": "rentals", "database_id": "REPLACE_AFTER_CREATE", "migrations_dir": "migrations" }
+    { "binding": "DB", "database_name": "rentals", "database_id": "6c8930b4-687a-437d-99b4-142647453f7e", "migrations_dir": "migrations" }
   ],
 
   "r2_buckets": [
