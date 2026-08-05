@@ -6,13 +6,13 @@
   "scripts": {
     "dev": "wrangler dev",
     "dev:remote": "wrangler dev --remote",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy --env=\"\"",
     "deploy:prod": "wrangler deploy --env prod",
     "types": "wrangler types",
     "typecheck": "wrangler types && tsc --noEmit",
-    "db:dev": "wrangler d1 execute whistler-rentals-db-dev --remote --file=./schema.sql",
-    "db:prod": "wrangler d1 execute whistler-rentals-db-prod --remote --file=./schema.sql",
-    "db:local": "wrangler d1 execute whistler-rentals-db-dev --local --file=./schema.sql"
+    "migrate:dev": "wrangler d1 migrations apply whistler-rentals-db-dev --remote",
+    "migrate:prod": "wrangler d1 migrations apply whistler-rentals-db-prod --remote --env prod",
+    "migrate:local": "wrangler d1 migrations apply whistler-rentals-db-dev --local"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
