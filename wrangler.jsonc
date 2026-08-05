@@ -1,0 +1,45 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "whistler-rentals",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": { "enabled": true },
+
+  "vars": {
+    "SITE_URL": "https://whistlerrentals.example",
+    "FB_EXCLUSIVITY_HOURS": "36"
+  },
+
+  "d1_databases": [
+    { "binding": "DB", "database_name": "rentals", "database_id": "REPLACE_AFTER_CREATE", "migrations_dir": "migrations" }
+  ],
+
+  "r2_buckets": [
+    { "binding": "MEDIA", "bucket_name": "rentals-media" },
+    { "binding": "EVIDENCE", "bucket_name": "rentals-evidence" }
+  ],
+
+  "kv_namespaces": [
+    { "binding": "SESSIONS", "id": "REPLACE_AFTER_CREATE" }
+  ],
+
+  "queues": {
+    "producers": [{ "binding": "ALERTS", "queue": "rentals-alerts" }],
+    "consumers": [{ "queue": "rentals-alerts", "max_batch_size": 10, "max_retries": 3, "dead_letter_queue": "rentals-alerts-dlq" }]
+  },
+
+  "durable_objects": {
+    "bindings": [{ "name": "CONVERSATION", "class_name": "Conversation" }]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Conversation"] }
+  ],
+
+  "ai": { "binding": "AI" },
+
+  "vectorize": [
+    { "binding": "VECTORIZE", "index_name": "rentals-listings" }
+  ]
+}
