@@ -1,0 +1,89 @@
+#:schema node_modules/wrangler/config-schema.json
+
+# ---------------------------------------------------------------------------
+# whistler-rentals
+#
+# Top-level config = DEV. [env.prod] = PROD.
+# Environments do NOT inherit bindings — every binding is restated under prod.
+#
+# Deploy dev:   npx wrangler deploy
+# Deploy prod:  npx wrangler deploy --env prod
+# ---------------------------------------------------------------------------
+
+name = "whistler-rentals"
+main = "src/index.ts"
+compatibility_date = "2026-08-05"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+# --- DEV bindings ----------------------------------------------------------
+
+[[d1_databases]]
+binding = "DB"
+database_name = "whistler-rentals-db-dev"
+database_id = "00f27652-9548-41a2-9856-91b6b2e71822"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "852420b2d1bf4fccbb38eabe1e5693c2"
+
+[[kv_namespaces]]
+binding = "LANDLORDS"
+id = "d23c10cdabc841cabfe0f1ae44100234"
+
+[[kv_namespaces]]
+binding = "RATELIMIT"
+id = "654d996d0c364c92b1d0bf18ed7696fc"
+
+[vars]
+ENVIRONMENT = "dev"
+
+# Vectorize — commented out until you decide you need semantic search.
+# Create the index BEFORE uncommenting:
+#   npx wrangler vectorize create rentals-listings-dev --dimensions=768 --metric=cosine
+# [[vectorize]]
+# binding = "VECTORIZE"
+# index_name = "rentals-listings-dev"
+# remote = true   # no local simulation for Vectorize
+
+# --- PROD ------------------------------------------------------------------
+
+[env.prod]
+name = "whistler-rentals-prod"
+compatibility_date = "2026-08-05"
+compatibility_flags = ["nodejs_compat"]
+
+[env.prod.observability]
+enabled = true
+
+[[env.prod.d1_databases]]
+binding = "DB"
+database_name = "whistler-rentals-db-prod"
+database_id = "6c8930b4-687a-437d-99b4-142647453f7e"
+
+[[env.prod.kv_namespaces]]
+binding = "SESSIONS"
+id = "2255ed3173db490ba0772c61bca0adeb"
+
+[[env.prod.kv_namespaces]]
+binding = "LANDLORDS"
+id = "1b2075a88ef743eca0102d6829e6b47f"
+
+[[env.prod.kv_namespaces]]
+binding = "RATELIMIT"
+id = "32c60d1bd3e049a09c89e6ce9891b9c3"
+
+[env.prod.vars]
+ENVIRONMENT = "prod"
+
+# [[env.prod.vectorize]]
+# binding = "VECTORIZE"
+# index_name = "rentals-listings-prod"
+# remote = true
+
+# Custom domain routes — uncomment once the zone is on Cloudflare.
+# [[env.prod.routes]]
+# pattern = "whistlerrentals.example.com/*"
+# zone_name = "whistlerrentals.example.com"

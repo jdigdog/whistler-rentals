@@ -1,0 +1,5 @@
+# Copy to .dev.vars for local development. NEVER commit .dev.vars.
+# In deployed environments these are set with:
+#   npx wrangler secret put FB_APP_SECRET
+#   npx wrangler secret put FB_APP_SECRET --env prod
+FB_APP_SECRET="local-placeholder"
