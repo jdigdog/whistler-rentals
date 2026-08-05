@@ -22,7 +22,7 @@
   ],
 
   "kv_namespaces": [
-    { "binding": "SESSIONS", "id": "REPLACE_AFTER_CREATE" }
+    { "binding": "SESSIONS", "id": "852420b2d1bf4fccbb38eabe1e5693c2" }
   ],
 
   "queues": {
