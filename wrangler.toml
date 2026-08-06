@@ -18,6 +18,12 @@ compatibility_flags = ["nodejs_compat"]
 [observability]
 enabled = true
 
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+
+
 # --- DEV bindings ----------------------------------------------------------
 
 [[d1_databases]]
@@ -57,6 +63,12 @@ compatibility_flags = ["nodejs_compat"]
 
 [env.prod.observability]
 enabled = true
+
+[env.prod.assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+
 
 [[env.prod.d1_databases]]
 binding = "DB"
