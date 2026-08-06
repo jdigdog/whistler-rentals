@@ -26,6 +26,7 @@ export interface Env {
   RATELIMIT: KVNamespace;
   ENVIRONMENT: string;
   ADMIN_TOKEN: string; // wrangler secret put ADMIN_TOKEN
+  ASSETS: Fetcher;     // static files in ./public
   // AI: Ai;            // add [ai] binding = "AI" to wrangler.toml
 }
 
@@ -84,6 +85,10 @@ export default {
           return cors(await reviewListing(request, env, reviewMatch[1]));
         }
       }
+
+      // Anything that isn't an API route is a page request — hand it to
+      // the static assets in ./public.
+      if (!path.startsWith("/api/")) return env.ASSETS.fetch(request);
 
       return cors(json({ error: "Not found" }, 404));
     } catch (err) {

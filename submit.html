@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post a place — Whistler Rentals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Public+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --spruce:#0E1D26;--slate:#22333D;--snow:#EEF3F5;--glacier:#4FB3C9;
+    --lichen:#B8C44A;--mist:#7F949E;--line:rgba(238,243,245,.14);--alarm:#E4796B;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--spruce);color:var(--snow);font-family:"Public Sans",system-ui,sans-serif;line-height:1.55}
+  a{color:var(--glacier)}
+  :focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px 60px}
+
+  header{border-bottom:1px solid var(--line);padding:26px 0 22px;margin-bottom:28px}
+  .back{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:12px;text-decoration:none}
+  h1{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+     font-size:clamp(24px,4vw,32px);margin:14px 0 8px}
+  .lede{color:var(--mist);font-size:15px;margin:0;max-width:52ch}
+
+  .field{margin-bottom:18px}
+  label{display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;
+        font-size:11px;color:var(--mist);margin-bottom:6px}
+  .hint{color:var(--mist);font-size:12.5px;margin-top:5px}
+  input,select,textarea{
+    width:100%;background:var(--slate);color:var(--snow);border:1px solid var(--line);
+    border-radius:2px;padding:10px 11px;font-family:"Public Sans",sans-serif;font-size:15px;
+  }
+  textarea{min-height:130px;resize:vertical}
+  .row{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+  @media(max-width:520px){.row{grid-template-columns:1fr}}
+  .check{display:flex;align-items:center;gap:9px}
+  .check input{width:17px;height:17px;accent-color:var(--glacier)}
+  .check label{margin:0;font-size:13px;color:var(--snow);text-transform:none;letter-spacing:0;font-family:"Public Sans",sans-serif}
+
+  button{
+    font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:14px;
+    background:var(--glacier);color:var(--spruce);border:0;border-radius:2px;
+    padding:13px 22px;cursor:pointer;width:100%;
+  }
+  button:hover{background:var(--snow)}
+  button[disabled]{opacity:.5;cursor:default}
+
+  .notice{border-left:3px solid var(--glacier);background:var(--slate);padding:14px 16px;margin-bottom:26px;font-size:14px}
+  .errors{border-left:3px solid var(--alarm);background:var(--slate);padding:14px 16px;margin-bottom:20px;font-size:14px}
+  .errors strong{display:block;font-family:"Oswald",sans-serif;letter-spacing:.05em;margin-bottom:6px}
+  .errors ul{margin:0;padding-left:18px;color:var(--mist)}
+  .done{text-align:center;padding:56px 0}
+  .done strong{display:block;font-family:"Oswald",sans-serif;font-size:24px;letter-spacing:.05em;margin-bottom:10px}
+  .done p{color:var(--mist);max-width:44ch;margin:0 auto 22px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="back" href="/">← All places</a>
+    <h1>Post a place</h1>
+    <p class="lede">Tell us about the rental. We read every listing before it goes up, usually within a day.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="notice">
+    Listings stay private until we've checked them. We'll email you when yours is live.
+  </div>
+
+  <div id="errors" class="errors hidden"><strong>Fix these first</strong><ul></ul></div>
+
+  <form id="form">
+    <div class="field">
+      <label for="landlord_id">Landlord ID</label>
+      <input id="landlord_id" required>
+      <p class="hint">Temporary — landlord accounts aren't built yet, so paste the ID you were given.</p>
+    </div>
+
+    <div class="field">
+      <label for="title">Headline</label>
+      <input id="title" maxlength="140" required placeholder="Bright 2 bedroom in Alpine Meadows, ski season">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="neighbourhood">Area</label>
+        <select id="neighbourhood"><option value="">Choose one</option></select>
+      </div>
+      <div class="field">
+        <label for="rent">Rent per month (CAD)</label>
+        <input id="rent" type="number" min="1" step="50" required placeholder="2400">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="bedrooms">Bedrooms</label>
+        <select id="bedrooms">
+          <option value="">Not sure</option><option value="0">Studio</option>
+          <option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="4">4</option><option value="5">5+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="available_from">Available from</label>
+        <input id="available_from" type="date">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea id="description" maxlength="5000" placeholder="Parking, heat, laundry, who else lives there, minimum stay, pets."></textarea>
+      <p class="hint">Specifics get replies. Vague listings get ignored.</p>
+    </div>
+
+    <div class="field">
+      <label for="contact_email">Your email</label>
+      <input id="contact_email" type="email" placeholder="you@example.com">
+      <p class="hint">Only used to reach you about this listing. Never shown publicly.</p>
+    </div>
+
+    <div class="field check">
+      <input type="checkbox" id="furnished"><label for="furnished">Furnished</label>
+    </div>
+
+    <button id="submit" type="submit">Send for review</button>
+  </form>
+
+  <div id="done" class="done hidden">
+    <strong>Listing received</strong>
+    <p>We'll look it over and email you when it's live. Most listings are reviewed within a day.</p>
+    <a class="back" href="/">← Back to all places</a>
+  </div>
+</main>
+
+<script>
+const AREAS = ["Whistler Village","Creekside","Alta Vista","Alpine Meadows","Emerald Estates",
+  "Function Junction","Cheakamus Crossing","Spring Creek","Bayshores","Pemberton","Squamish","Other"];
+const $ = (id) => document.getElementById(id);
+AREAS.forEach(a => { const o = document.createElement("option"); o.value = a; o.textContent = a; $("neighbourhood").append(o); });
+
+function showErrors(list){
+  const box = $("errors");
+  box.querySelector("ul").innerHTML = "";
+  list.forEach(e => { const li = document.createElement("li"); li.textContent = e; box.querySelector("ul").append(li); });
+  box.classList.remove("hidden");
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+$("form").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  $("errors").classList.add("hidden");
+  $("submit").disabled = true;
+  $("submit").textContent = "Sending…";
+
+  const body = {
+    landlord_id: $("landlord_id").value.trim(),
+    title: $("title").value.trim(),
+    description: $("description").value.trim() || undefined,
+    neighbourhood: $("neighbourhood").value || undefined,
+    rent_cents: Math.round(Number($("rent").value) * 100),
+    bedrooms: $("bedrooms").value === "" ? undefined : Number($("bedrooms").value),
+    furnished: $("furnished").checked,
+    available_from: $("available_from").value || undefined,
+    contact_email: $("contact_email").value.trim() || undefined
+  };
+
+  try {
+    const res = await fetch("/api/listings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      $("form").classList.add("hidden");
+      document.querySelector(".notice").classList.add("hidden");
+      $("done").classList.remove("hidden");
+      return;
+    }
+    if (res.status === 429) {
+      showErrors(["You've posted several listings recently. Try again in an hour."]);
+    } else {
+      showErrors(data.errors || [data.error || "Something went wrong. Try again."]);
+    }
+  } catch {
+    showErrors(["Couldn't reach the server. Check your connection and try again."]);
+  } finally {
+    $("submit").disabled = false;
+    $("submit").textContent = "Send for review";
+  }
+});
+</script>
+</body>
+</html>
