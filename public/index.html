@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whistler Rentals — verified places in the Sea-to-Sky</title>
+<meta name="description" content="Long-term rentals in Whistler and Pemberton, listed by landlords we've checked.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Public+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --spruce:#0E1D26;      /* deep shadowed evergreen — page ground */
+    --slate:#22333D;       /* card ground */
+    --snow:#EEF3F5;        /* primary text */
+    --glacier:#4FB3C9;     /* cold accent — interactive */
+    --lichen:#B8C44A;      /* the one warm-ish counterpoint, used once */
+    --mist:#7F949E;        /* secondary text */
+    --line:rgba(238,243,245,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--spruce);
+    color:var(--snow);
+    font-family:"Public Sans",system-ui,sans-serif;
+    font-size:16px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--glacier)}
+  :focus-visible{outline:2px solid var(--glacier);outline-offset:3px}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ---- masthead ---- */
+  header{border-bottom:1px solid var(--line);padding:26px 0 22px}
+  .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .wordmark{
+    font-family:"Oswald",sans-serif;font-weight:600;
+    font-size:clamp(26px,4.4vw,38px);letter-spacing:.14em;text-transform:uppercase;
+    margin:0;line-height:1;
+  }
+  .wordmark span{color:var(--glacier)}
+  .tagline{color:var(--mist);font-size:14px;margin:6px 0 0;max-width:46ch}
+  .post-link{
+    font-family:"Oswald",sans-serif;letter-spacing:.1em;text-transform:uppercase;
+    font-size:13px;text-decoration:none;color:var(--spruce);background:var(--glacier);
+    padding:10px 16px;border-radius:2px;white-space:nowrap;
+  }
+  .post-link:hover{background:var(--snow)}
+
+  /* ---- filter bar: the working surface, so it leads ---- */
+  .filters{
+    display:grid;gap:12px;padding:20px 0 18px;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    align-items:end;
+  }
+  label{
+    display:block;font-family:"Oswald",sans-serif;text-transform:uppercase;
+    letter-spacing:.1em;font-size:11px;color:var(--mist);margin-bottom:6px;
+  }
+  select,input[type=number]{
+    width:100%;background:var(--slate);color:var(--snow);
+    border:1px solid var(--line);border-radius:2px;padding:9px 10px;
+    font-family:"Public Sans",sans-serif;font-size:15px;
+  }
+  .check{display:flex;align-items:center;gap:8px;padding-bottom:9px}
+  .check input{width:17px;height:17px;accent-color:var(--glacier)}
+  .check label{margin:0;font-size:12px;color:var(--snow)}
+
+  /* ---- count line ---- */
+  .countline{
+    display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    border-top:1px solid var(--line);padding:16px 0 4px;
+  }
+  .count{font-family:"Oswald",sans-serif;font-size:30px;line-height:1}
+  .count-label{color:var(--mist);font-size:14px}
+
+  /* ---- listings ---- */
+  .grid{display:grid;gap:14px;padding:14px 0 40px;grid-template-columns:repeat(auto-fill,minmax(310px,1fr))}
+  .card{
+    background:var(--slate);border:1px solid var(--line);border-radius:3px;
+    padding:18px;display:flex;flex-direction:column;gap:12px;
+    animation:rise .32s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card h2{font-family:"Oswald",sans-serif;font-weight:400;font-size:19px;margin:0;line-height:1.25}
+  .rent{font-family:"IBM Plex Mono",monospace;font-size:22px;color:var(--lichen)}
+  .rent small{color:var(--mist);font-size:12px;font-family:"Public Sans",sans-serif}
+  .meta{color:var(--mist);font-size:13px;display:flex;gap:14px;flex-wrap:wrap}
+  .byline{
+    display:flex;align-items:center;gap:9px;font-size:13px;
+    border-top:1px solid var(--line);padding-top:12px;margin-top:auto;
+  }
+
+  /* ---- signature: trail-marker verification ---- */
+  .marker{width:13px;height:13px;flex:none}
+  .marker.verified{background:#3FA34D;border-radius:50%}
+  .marker.pending{background:#3E7CB1}
+  .marker.unverified{background:#12181C;border:1px solid var(--mist);transform:rotate(45deg)}
+
+  .legend{
+    display:flex;gap:20px;flex-wrap:wrap;align-items:center;
+    border-top:1px solid var(--line);padding:16px 0 34px;color:var(--mist);font-size:12.5px;
+  }
+  .legend span{display:flex;align-items:center;gap:8px}
+
+  /* ---- states ---- */
+  .state{padding:52px 0;text-align:center;color:var(--mist)}
+  .state strong{display:block;font-family:"Oswald",sans-serif;font-size:20px;color:var(--snow);margin-bottom:8px;letter-spacing:.04em}
+  .skeleton{height:132px;background:var(--slate);border-radius:3px;opacity:.5}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <div>
+      <h1 class="wordmark">Whistler <span>Rentals</span></h1>
+      <p class="tagline">Long-term places in the Sea-to-Sky, posted by landlords we check before anything goes live.</p>
+    </div>
+    <a class="post-link" href="/submit.html">Post a place</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="filters">
+    <div>
+      <label for="hood">Area</label>
+      <select id="hood"><option value="">Anywhere</option></select>
+    </div>
+    <div>
+      <label for="rent">Max rent / month</label>
+      <input id="rent" type="number" min="0" step="100" placeholder="Any">
+    </div>
+    <div>
+      <label for="beds">Bedrooms, min</label>
+      <select id="beds">
+        <option value="">Any</option><option value="0">Studio</option>
+        <option value="1">1</option><option value="2">2</option>
+        <option value="3">3</option><option value="4">4+</option>
+      </select>
+    </div>
+    <div class="check">
+      <input type="checkbox" id="verified"><label for="verified">Verified landlords only</label>
+    </div>
+  </div>
+
+  <div class="countline">
+    <span class="count" id="count">—</span>
+    <span class="count-label" id="countLabel">loading places</span>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="marker verified"></i> Verified — we've confirmed who they are</span>
+    <span><i class="marker pending"></i> Being checked</span>
+    <span><i class="marker unverified"></i> Not yet checked — meet in person, never send a deposit first</span>
+  </div>
+</main>
+
+<script>
+const AREAS = ["Whistler Village","Creekside","Alta Vista","Alpine Meadows","Emerald Estates",
+  "Function Junction","Cheakamus Crossing","Spring Creek","Bayshores","Pemberton","Squamish"];
+
+const $ = (id) => document.getElementById(id);
+const grid = $("grid");
+
+AREAS.forEach(a => { const o = document.createElement("option"); o.value = a; o.textContent = a; $("hood").append(o); });
+
+const money = (cents) => "$" + Math.round(cents / 100).toLocaleString("en-CA");
+
+function bedLabel(n){
+  if (n === null || n === undefined) return "";
+  if (n === 0) return "Studio";
+  return n + (n === 1 ? " bed" : " beds");
+}
+
+function when(date){
+  if (!date) return "Available now";
+  const d = new Date(date + "T00:00:00");
+  if (isNaN(d)) return "";
+  return "From " + d.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+}
+
+function card(l, i){
+  const el = document.createElement("article");
+  el.className = "card";
+  el.style.animationDelay = Math.min(i * 35, 280) + "ms";
+
+  const status = l.verification_status || "unverified";
+  const bits = [bedLabel(l.bedrooms), l.neighbourhood, when(l.available_from)].filter(Boolean);
+
+  el.innerHTML = `
+    <h2></h2>
+    <div class="rent">${money(l.rent_cents)} <small>/ month</small></div>
+    <div class="meta">${bits.map(b => `<span></span>`).join("")}</div>
+    <div class="byline"><i class="marker ${status}"></i><span class="who"></span></div>`;
+
+  el.querySelector("h2").textContent = l.title;
+  el.querySelectorAll(".meta span").forEach((s, n) => s.textContent = bits[n]);
+  el.querySelector(".who").textContent = l.landlord_name || "Private landlord";
+  return el;
+}
+
+async function load(){
+  const p = new URLSearchParams();
+  if ($("hood").value) p.set("neighbourhood", $("hood").value);
+  if ($("rent").value) p.set("max_rent", $("rent").value);
+  if ($("beds").value !== "") p.set("min_bedrooms", $("beds").value);
+  if ($("verified").checked) p.set("verified_only", "true");
+
+  grid.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+
+  try {
+    const res = await fetch("/api/listings?" + p);
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const listings = data.listings || [];
+
+    $("count").textContent = listings.length;
+    $("countLabel").textContent = listings.length === 1 ? "place listed" : "places listed";
+
+    grid.innerHTML = "";
+    if (!listings.length){
+      grid.innerHTML = `<div class="state" style="grid-column:1/-1">
+        <strong>Nothing matches those filters</strong>
+        Widen the rent or the area — new places go up most days.</div>`;
+      return;
+    }
+    listings.forEach((l, i) => grid.append(card(l, i)));
+  } catch {
+    $("count").textContent = "—";
+    $("countLabel").textContent = "";
+    grid.innerHTML = `<div class="state" style="grid-column:1/-1">
+      <strong>Listings didn't load</strong>Reload the page to try again.</div>`;
+  }
+}
+
+["hood","rent","beds","verified"].forEach(id => {
+  const ev = id === "rent" ? "input" : "change";
+  let t; $(id).addEventListener(ev, () => { clearTimeout(t); t = setTimeout(load, 250); });
+});
+
+load();
+</script>
+</body>
+</html>
